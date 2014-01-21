@@ -1,0 +1,65 @@
+INSERT INTO voters(first_name, last_name, gender, party, party_duration, age, married, children_count, homeowner, employed) VALUES ('Bill', 'SMith', 'Male', 'Republican', 2, 57, 0, 0, 0, 0);
+INSERT INTO voters(first_name, last_name, gender, party, party_duration, age, married, children_count, homeowner, employed,created_at,updated_at) VALUES ('Bill', 'SMith', 'Male', 'Republican', 2, 57, 0, 0, 0,0,0,0);
+INSERT INTO voters(first_name, last_name, gender, party, party_duration, age, married, children_count, homeowner, employed,created_at,updated_at) VALUES ('Jane', 'SMith', 'Female', 'Republican', 2, 57, 0, 0, 0,0,0,0);
+SELECT voters.id FROM voters WHERE first_name = 'Jane'
+;
+INSERT INTO congress_members(name,party,location,grade_1996,grade_current,years_in_congress,dw1_score,created_at,updated_at) VALUES('Rep. Bobby Longhorn','Republican','TX',8,9,30,3,0,0)
+;
+INSERT INTO congress_members(name,party,location,grade_1996,grade_current,years_in_congress,dw1_score,created_at,updated_at) VALUES('Rep. Helen Cattlerancher','Republican','TX',8,9,30,3,0,0);
+SELECT congress_members.id FROM congress_members WHERE name = 'Rep. Bobby Longhorn';
+SELECT congress_members.id FROM congress_members WHERE name = 'Rep. Helen Cattlerancher';
+SELECT voters.id FROM voters WHERE first_name = 'Bill'
+;
+SELECT sql FROM   (SELECT sql sql, type type, tbl_name tbl_name, name name, rowid x     FROM sqlite_master UNION ALL   SELECT sql, type, tbl_name, name, rowid FROM sqlite_temp_master) WHERE type!='meta' AND sql NOTNULL AND name NOT LIKE 'sqlite_%'ORDER BY substr(type,2,1), CASE type WHEN 'view' THEN rowid ELSE name END
+INSERT INTO votes(voter_id,politician_id,created_at,updated_at)VALUES(5001,531,0,0)
+;
+INSERT INTO votes(voter_id,politician_id,created_at,updated_at)VALUES(5002,532,0,0);
+INSERT INTO congress_members(name,party,location,grade_1996,grade_current,years_in_congress,dw1_score,created_at,updated_at)VALUES('Rep. Donald Trump','Republican','NJ',9,10,0,1,0,0)
+;
+SELECT congress_members.name FROM congress_members WHERE location = 'NJ';
+DELETE FROM congress_members WHERE congress_members.name = 'Sen. Frank Lautenberg';
+SELECT congress_members.name FROM congress_members WHERE location = 'NJ';
+SELECT congress_members.id FROM congress_members WHERE name = 'Rep. Bill Pascrell'
+;
+SELECT voters.id FROM voters JOIN votes ON voters.id=votes.voter_id WHERE politician_id = 168;
+SELECT sql FROM   (SELECT sql sql, type type, tbl_name tbl_name, name name, rowid x     FROM sqlite_master UNION ALL   SELECT sql, type, tbl_name, name, rowid FROM sqlite_temp_master) WHERE type!='meta' AND sql NOTNULL AND name NOT LIKE 'sqlite_%'ORDER BY substr(type,2,1), CASE type WHEN 'view' THEN rowid ELSE name END
+INSERT INTO votes(voter_id, politician_id, created_at, updated_at) VALUES (2792, 533, 0, 0);
+INSERT INTO votes(voter_id, politician_id, created_at, updated_at) VALUES (4583, 533, 0, 0);
+INSERT INTO votes(voter_id, politician_id, created_at, updated_at) VALUES (473, 533, 0, 0);
+INSERT INTO votes(voter_id, politician_id, created_at, updated_at) VALUES (4921, 533, 0, 0);
+INSERT INTO votes(voter_id, politician_id, created_at, updated_at) VALUES (3955, 533, 0, 0);
+INSERT INTO votes(voter_id, politician_id, created_at, updated_at) VALUES (1507, 533, 0, 0);
+INSERT INTO votes(voter_id, politician_id, created_at, updated_at) VALUES (808, 533, 0, 0);
+INSERT INTO votes(voter_id, politician_id, created_at, updated_at) VALUES (2309, 533, 0, 0);
+INSERT INTO votes(voter_id, politician_id, created_at, updated_at) VALUES (3732, 533, 0, 0);
+INSERT INTO votes(voter_id, politician_id, created_at, updated_at) VALUES (618, 533, 0, 0);
+INSERT INTO votes(voter_id, politician_id, created_at, updated_at) VALUES (3685, 533, 0, 0);
+INSERT INTO votes(voter_id, politician_id, created_at, updated_at) VALUES (2526, 533, 0, 0);
+INSERT INTO votes(voter_id, politician_id, created_at, updated_at) VALUES (811, 533, 0, 0);
+INSERT INTO votes(voter_id, politician_id, created_at, updated_at) VALUES (4976, 533, 0, 0);
+SELECT voters.first_name, voters.last_name, congress_members.name FROM congress_members JOIN votes ON congress_members.id=votes.politician_id JOIN voters ON votes.voter_id = voters.id WHERE votes.politician_id =1 GROUP BY voters.first_name;
+SELECT voters.first_name, voters.last_name, congress_members.name FROM congress_members JOIN votes ON congress_members.id=votes.politician_id JOIN voters ON votes.voter_id = voters.id WHERE votes.politician_id =1 AND voters.party IS NULL GROUP BY voters.first_name;
+SELECT * FROM voters WHERE voters.first_name = 'Augusta';
+SELECT sql FROM   (SELECT sql sql, type type, tbl_name tbl_name, name name, rowid x     FROM sqlite_master UNION ALL   SELECT sql, type, tbl_name, name, rowid FROM sqlite_temp_master) WHERE type!='meta' AND sql NOTNULL AND name NOT LIKE 'sqlite_%'ORDER BY substr(type,2,1), CASE type WHEN 'view' THEN rowid ELSE name END
+SELECT voters.id FROM voters JOIN votes ON voters.id=votes.voter_id JOIN congress_members ON votes.politician_id =congress_members.id WHERE voters.homeowner = 0 AND voters.employed = 1 AND children_count =0 AND party_duration < 3 AND congress_members.grade_current > 12;
+DELETE FROM voters WHERE voters.id = 1617;
+DELETE FROM voters WHERE voters.id = 2561;
+DELETE FROM voters WHERE voters.id = 3527;
+DELETE FROM voters WHERE voters.id = 1306;
+DELETE FROM votes WHERE  votes.voter_id = 1617;
+DELETE FROM votes WHERE  votes.voter_id = 2561;
+DELETE FROM votes WHERE  votes.voter_id = 3527;
+DELETE FROM votes WHERE  votes.voter_id = 1306;
+SELECT voters.id FROM voters JOIN votes ON voters.id = votes.voter_id WHERE voters.age >80 AND children_count =0;
+SELECT sql FROM   (SELECT sql sql, type type, tbl_name tbl_name, name name, rowid x     FROM sqlite_master UNION ALL   SELECT sql, type, tbl_name, name, rowid FROM sqlite_temp_master) WHERE type!='meta' AND sql NOTNULL AND name NOT LIKE 'sqlite_%'ORDER BY substr(type,2,1), CASE type WHEN 'view' THEN rowid ELSE name END
+SELECT congress_members.name, congress_members.grade_1996 FROM congress_members JOIN votes ON congress_members.id = votes.politician_id GROUP BY congress_members.name;
+SELECT congress_members.name, congress_members.grade_1996 FROM congress_members JOIN votes ON congress_members.id = votes.politician_id GROUP BY congress_members.name ORDER BY congress_members.grade_1996 DESC;
+SELECT congress_members.id FROM congress_members WHERE congress_members.name = 'Rep. Mick Mulvan';
+SELECT sql FROM   (SELECT sql sql, type type, tbl_name tbl_name, name name, rowid x     FROM sqlite_master UNION ALL   SELECT sql, type, tbl_name, name, rowid FROM sqlite_temp_master) WHERE type!='meta' AND sql NOTNULL AND name NOT LIKE 'sqlite_%'ORDER BY substr(type,2,1), CASE type WHEN 'view' THEN rowid ELSE name END
+SELECT congress_members.id FROM congress_members WHERE congress_members.name = 'Rep. Dan Lungren';
+SELECT * FROM congress_members WHERE congress_members.name = 'Rep. Mick Mulvan';
+SELECT * FROM congress_members WHERE congress_members.name = 'Rep. Helen Cattlerancher';
+SELECT * FROM congress_members WHERE congress_members.name LIKE 'Mick Mulvan%';
+SELECT * FROM congress_members WHERE congress_members.name LIKE 'Rep. Mick Mulvan%';
+DELETE FROM votes WHERE votes.politician_id = 530;
+INSERT INTO votes(voter_id,politician_id,created_at,updated_at)VALUES(123,1,0,0);
