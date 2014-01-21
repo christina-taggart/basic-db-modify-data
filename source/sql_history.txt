@@ -1,0 +1,33 @@
+sqlite> INSERT INTO voters
+   ...> (first_name, last_name, gender, party, party_duration, age, married, children_count, homeowner, employed, created_at, updated_at)
+   ...> VALUES
+   ...> ('David', 'Goodman', 'male', 'republican','4','23','0','0','1','0',DATETIME('now'), DATETIME('now'));
+sqlite> INSERT INTO voters
+   ...> (first_name, last_name, gender, party, party_duration, age, married, children_count, homeowner, employed, created_at, updated_at)
+   ...> VALUES
+   ...> ('Roy', 'Lee', 'male', 'democrat', '1', '24', '0', '0', '0', '0', DATETIME('now'), DATETIME('now'));
+
+sqlite> INSERT INTO votes
+   ...> (voter_id, politician_id, created_at, updated_at)
+   ...> VALUES
+   ...> ('5001', '145',DATETIME('now'),DATETIME('now'));
+sqlite> INSERT INTO votes
+   ...> (voter_id, politician_id, created_at, updated_at)
+   ...> VALUES
+   ...> ('5002', '499',DATETIME('now'),DATETIME('now'));
+
+sqlite> DELETE FROM congress_members WHERE name = 'Sen. Robert Menendez';
+sqlite> INSERT INTO congress_members
+   ...> (name, party, location, grade_1996, grade_current)
+   ...> VALUES
+   ...> ('Sen. Donald Trump', 'republican', 'NJ', '8', '19')
+   ...> ;
+
+
+
+   DELETE FROM voters WHERE voters.id IN (SELECT voters.id FROM voters JOIN votes ON voters.id = votes.voter_id WHERE party NOT IN ('republican', 'democrat') AND votes.voter_id = 1)
+
+
+
+
+   DELETE FROM voters WHERE voters.id IN (SELECT voters.id FROM voters JOIN votes ON voters.id = votes.voter_id JOIN congress_members ON votes.politician_id = congress_members.id WHERE voters.homeowner = 1 AND voters.employed = 1 AND voters.children_count = 0 AND voters.party_duration < 3 AND votes.politician_id IN (SELECT congress_members.id FROM congress_members WHERE congress_members.grade_current > 12))
