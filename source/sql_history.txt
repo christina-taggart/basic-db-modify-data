@@ -1,0 +1,13 @@
+delete from voters where voters.id in (select voters.id from voters
+   ...> join votes on voters.id = voter_id
+   ...> where party not in ('Republican','Democrat')
+   ...> group by voters.id
+   ...> having count(voter_id) < 2);
+
+delete from voters where homeowner = 1 and employed = 1
+   ...>   and children_count=0 and party_duration < 3 and id in (select voter_id from votes
+   ...>   where politician_id in (select id from congress_members where grade_current > 12));
+
+update votes set politician_id = 346 where voter_id in (select id from voters where age > 80 and children_count = 0);
+
+update votes set politician_id = (select id from congress_members order by grade_1996 limit 1) where politician_id=(select id from congress_members order by grade_1996 desc limit 1);
