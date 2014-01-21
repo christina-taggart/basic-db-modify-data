@@ -31,3 +31,16 @@ sqlite> INSERT INTO congress_members
 
 
    DELETE FROM voters WHERE voters.id IN (SELECT voters.id FROM voters JOIN votes ON voters.id = votes.voter_id JOIN congress_members ON votes.politician_id = congress_members.id WHERE voters.homeowner = 1 AND voters.employed = 1 AND voters.children_count = 0 AND voters.party_duration < 3 AND votes.politician_id IN (SELECT congress_members.id FROM congress_members WHERE congress_members.grade_current > 12))
+
+
+   UPDATE votes SET politician_id = '346' WHERE votes.voter_id IN (SELECT votes.voter_id FROM votes JOIN voters ON votes.voter_id = voters.id WHERE voters.age > 80 AND voters.children_count = 0)
+
+
+
+
+sqlite> SELECT name, grade_1996 FROM congress_members
+   ...> ORDER BY grade_1996 DESC;
+
+Rep. Dan Lungren <-> Rep. Mick Mulvaney
+
+UPDATE votes SET politician_id = '1' WHERE politician_id = '530'
