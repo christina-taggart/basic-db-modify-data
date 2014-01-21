@@ -1,0 +1,237 @@
+=================================
+Release 0
+=================================
+1)
+insert into voters
+(first_name, last_name, gender, party, age, married, children_count, homeowner, employed, created_at, updated_at)
+values
+("Kevin", "Yeh", "male", "democrat", 66, 0, 0, 0, 0, DATETIME('now'), DATETIME('now'));
+
+insert into voters
+(first_name, last_name, gender, party, age, married, children_count, homeowner, employed, created_at, updated_at)
+values
+("LeBron", "James", "male", "democrat", 31, 0, 0, 0, 0, DATETIME('now'), DATETIME('now'));
+
+sqlite> select * from voters where last_name in ("Yeh","James");
+id          first_name  last_name   gender      party       party_duration  age         married     children_count  homeowner   employed    created_at           updated_at
+----------  ----------  ----------  ----------  ----------  --------------  ----------  ----------  --------------  ----------  ----------  -------------------  -------------------
+5001        Kevin       Yeh         male        democrat                    66          0           0               0           0           2014-01-21 02:22:36  2014-01-21 02:22:36
+5002        LeBron      James       male        democrat                    31          0           0               0           0           2014-01-21 02:24:41  2014-01-21 02:24:41
+sqlite>
+
+sqlite> select * from congress_members where location = 'TX' and name like 'Sen.%';
+id          name                party       location    grade_1996   grade_current  years_in_congress  dw1_score   created_at                 updated_at
+----------  ------------------  ----------  ----------  -----------  -------------  -----------------  ----------  -------------------------  -------------------------
+145         Sen. Kay Hutchison  R           TX          10.85621564  10.30025068    17                 0.358       2012-10-10 15:28:36 -0700  2012-10-10 15:28:36 -0700
+499         Sen. John Cornyn    R           TX          13.0218724   12.43513548    7                  0.491       2012-10-10 15:28:36 -0700  2012-10-10 15:28:36 -0700
+
+
+sqlite> select name, count(1) from congress_members join votes on congress_members.id = votes.politician_id where location = 'TX' and name like 'Sen.%'  group by name;
+name              count(1)
+----------------  ----------
+Sen. John Cornyn  15
+Sen. Kay Hutchis  19
+
+insert into votes
+(voter_id, politician_id, created_at, updated_at)
+values
+(5001, 145, DATETIME('now'),DATETIME('now'));
+
+
+insert into votes
+(voter_id, politician_id, created_at, updated_at)
+values
+(5001, 499, DATETIME('now'),DATETIME('now'));
+
+
+insert into votes
+(voter_id, politician_id, created_at, updated_at)
+values
+(5002, 145, DATETIME('now'),DATETIME('now'));
+
+
+insert into votes
+(voter_id, politician_id, created_at, updated_at)
+values
+(5002, 499, DATETIME('now'),DATETIME('now'));
+
+
+sqlite> select name, count(1) from congress_members join votes on congress_members.id = votes.politician_id where location = 'TX' and name like 'Sen.%'  group by name;
+name              count(1)
+----------------  ----------
+Sen. John Cornyn  17
+Sen. Kay Hutchis  20
+
+2)
+select * from congress_members where id = 102;
+
+d          name                   party       location    grade_1996   grade_current  years_in_congress  dw1_score   created_at                 updated_at
+----------  ---------------------  ----------  ----------  -----------  -------------  -----------------  ----------  -------------------------  -------------------------
+102         Sen. Frank Lautenberg  D           NJ          10.46638173  8.892749062    25                 -0.417      2012-10-10 15:28:36 -0700  2012-10-10 15:28:36 -0700
+
+delete from congress_members
+where id = 102;
+
+select * from congress_members where id = 102;
+
+insert into congress_members
+(id, name, party, location, grade_1996, grade_current, years_in_congress, dw1_score, created_at, updated_at)
+values
+(102, 'Sen. Donald Trump', 'R', 'NJ', 10.85621564, 10.30025068, 0, 0.358, DATETIME('now'), DATETIME('now'));
+
+select * from congress_members where id = 102;
+
+id          name               party       location    grade_1996   grade_current  years_in_congress  dw1_score   created_at           updated_at
+----------  -----------------  ----------  ----------  -----------  -------------  -----------------  ----------  -------------------  -------------------
+102         Sen. Donald Trump  R           NJ          10.85621564  10.30025068    0                  0.358       2014-01-21 02:43:54  2014-01-21 02:43:54
+
+select count(1) from votes where politician_id = 102;
+
+sqlite> select count(1) from votes where politician_id = 102;
+count(1)
+----------
+17
+
+=================================
+Release 1
+=================================
+1)
+
+select count(1) from voters;
+
+sqlite> select count(1) from voters;
+count(1)
+----------
+5002
+
+select count(1) from(
+select id from
+(
+select voters.id , count(1) as count from voters join votes on voters.id = votes.voter_id
+where party not in ('democrat', 'republican') group by voters.id having count == 1)
+);
+
+count(1)
+----------
+212
+
+delete from voters
+where
+voters.id in (
+select id from
+(
+select voters.id , count(1) as count from voters join votes on voters.id = votes.voter_id
+where party not in ('democrat', 'republican') group by voters.id having count == 1)
+);
+
+sqlite> select count(1) from voters;
+count(1)
+----------
+4790
+
+2)
+
+select * from voters where homeowner = 1 AND
+                           employed = 1 AND
+                           children_count = 0 AND
+                           party_duration < 3 AND
+                           id in (select DISTINCT voters.id from congress_members join votes on congress_members.id = votes.politician_id join voters on voters.id = votes.voter_id where grade_current > 12 );
+
+
+# how to find that a voter voted for a politician that speaks at a grade level higher than 12.
+
+select DISTINCT voters.id from congress_members join votes on congress_members.id = votes.politician_id join voters on voters.id = votes.voter_id where grade_current > 12 );
+
+select count(1) from (
+select * from voters where homeowner = 1 AND
+                           employed = 1 AND
+                           children_count = 0 AND
+                           party_duration < 3 AND
+                           id in (select DISTINCT voters.id from congress_members join votes on congress_members.id = votes.politician_id join voters on voters.id = votes.voter_id where grade_current > 12 )
+                           );
+count(1)
+----------
+5
+
+delete from voters(
+select id from voters where homeowner = 1 AND
+                           employed = 1 AND
+                           children_count = 0 AND
+                           party_duration < 3 AND
+                           id in (select DISTINCT voters.id from congress_members join votes on congress_members.id = votes.politician_id join voters on voters.id = votes.voter_id where grade_current > 12 )
+);
+
+sqlite> select count(1) from votes;
+count(1)
+----------
+10003 <<- number of votes before delete
+
+select count(1) from
+(
+select voter_id from votes where voter_id in(
+select id from voters where homeowner = 1 AND
+                           employed = 1 AND
+                           children_count = 0 AND
+                           party_duration < 3 AND
+                           id in (select DISTINCT voters.id from congress_members join votes on congress_members.id = votes.politician_id join voters on voters.id = votes.voter_id where grade_current > 12 )
+));
+
+count(1)
+----------
+13 <<- number of votes to delete
+
+delete from votes
+where voter_id in
+(
+select id from voters where homeowner = 1 AND
+                           employed = 1 AND
+                           children_count = 0 AND
+                           party_duration < 3 AND
+                           id in (select DISTINCT voters.id from congress_members join votes on congress_members.id = votes.politician_id join voters on voters.id = votes.voter_id where grade_current > 12 )
+)
+;
+
+sqlite> select count(1) from votes;
+
+count(1)
+----------
+9990 <<- number of votes after delete
+
+
+=================================
+Release 2
+=================================
+
+1)
+
+SELECT votes.* FROM voters JOIN votes ON voters.id = votes.voter_id WHERE age > 80 AND children_count = 0;
+
+UPDATE VOTES
+SET politician_id = 346
+WHERE ( votes.voter_id IN ( SELECT votes.voter_id FROM voters JOIN votes ON voters.id = votes.voter_id WHERE age > 80 AND children_count = 0));
+
+See attached 'before_update.txt' and 'after_update.txt'
+2)
+
+SELECT congress_members.* FROM congress_members ORDER BY grade_1996 LIMIT 10;
+
+lowest:
+1           Rep. Mick Mulvaney  R           SC          7.945704026  7.945704026    1                  0.819       2012-10-10 15:28:36 -0700  2012-10-10 15:28:36 -0700
+
+
+highest:
+530         Rep. Dan Lungren  R           CA          16.01390263  20.46577636    7                  0.504       2012-10-10 15:28:36 -0700  2012-10-10 15:28:36 -0700
+
+UPDATE VOTES
+SET politician_id = 1 WHERE politician_id = 530;
+
+before update:
+
+select count(1) from votes where politician_id = 530;
+select count(1) from votes where politician_id = 1;
+
+
+after update:
+
+select count(1) from votes where politician_id = 530;
+select count(1) from votes where politician_id = 1;
